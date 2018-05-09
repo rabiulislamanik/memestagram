@@ -6,10 +6,10 @@ const db = require('./config/db.js');
 app.get('/',(req,res,err)=>{
   console.log(db);
   db.connect();
-  db.query('SELECT * from users where user_id=81',(err,rows,fields)=>{
+  db.query('SELECT * from users',(err,rows,fields)=>{
     if(!err){
       console.log(rows);
-      res.status(200).send(rows[0]['user_id'].toString());
+      res.status(200).send(rows[0]);
     }
     else{
       res.send(err);
