@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-const db = require('./db.js');
+const db = require('./config/db.js');
 
 app.get('/',(req,res,err)=>{
   console.log(db);
