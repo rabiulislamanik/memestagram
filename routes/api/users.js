@@ -16,6 +16,7 @@ router.get('/:id',(req,res)=>{
   });
 });
 
+//register
 router.post('/register',(req,res)=>{
 
   db.query(`SELECT * from users where user_email=${db.escape(req.body.email)}`,(err,rows,fields)=>{
@@ -47,6 +48,33 @@ router.post('/register',(req,res)=>{
     }
   });
 
+});
+
+router.post('/login',(req,res)=>{
+  const email =req.body.email;
+  const password = req.body.password;
+  db.query(`SELECT user_email,user_password from users where user_email=${db.escape(email)}` , (err,rows,field)=>{
+    if(!err){
+      if(!rows[0]){
+        res.status(404).send({email: "Invalid User"});
+      }
+      else{
+        bcrypt.compare(password,rows[0].user_password)
+          .then(isMatched=>{
+            if(isMatched){
+              res.json({msg:"Success"});
+            }
+            else{
+              res.status(400).send({password : "Incorrect Password"});
+            }
+          })
+
+      }
+    }
+    else{
+      res.status(400).send(err);
+    }
+  });
 });
 
 module.exports=router;
