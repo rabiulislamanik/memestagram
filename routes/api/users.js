@@ -7,6 +7,9 @@ const passport = require('passport');
 
 const keys= require('../../config/keys.js');
 
+const validateRegisterInput = require('../../validation/register.js');
+const validateLoginInput = require('../../validation/login.js');
+
 router.get('/current', passport.authenticate('jwt', { session: false }),(req, res)=> {
   res.json({
       user_id : req.user.user_id,
@@ -30,13 +33,18 @@ router.get('/:id',(req,res)=>{
 
 //register
 router.post('/register',(req,res)=>{
-
+  const {errors,isValid} = validateRegisterInput(req.body);
+  if(!isValid){
+    //console.log(errors);
+    return res.status(400).send(errors);
+  }
   db.query(`SELECT * from users where user_email=${db.escape(req.body.email)}`,(err,rows,fields)=>{
 
     if(!err){
       //console.log(rows);
       if(rows[0]){
-        res.status(400).send({alert:"Email already exists."});
+        errors.email = "Email already exists";
+        res.status(400).send(errors);
       }
       else{
         bcrypt.genSalt(10, function(err, salt) {
@@ -63,12 +71,19 @@ router.post('/register',(req,res)=>{
 });
 
 router.post('/login',(req,res)=>{
+  const {errors,isValid} = validateLoginInput(req.body);
+  if(!isValid){
+    //console.log(errors);
+    return res.status(400).send(errors);
+  }
+
   const email =req.body.email;
   const password = req.body.password;
   db.query(`SELECT * from users where user_email=${db.escape(email)}` , (err,rows,field)=>{
     if(!err){
       if(!rows[0]){
-        res.status(404).send({email: "Invalid User"});
+        errors.email ="Invalid User.";
+        res.status(404).send(errors);
       }
       else{
         bcrypt.compare(password,rows[0].user_password)
