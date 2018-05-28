@@ -10,8 +10,8 @@ opts.secretOrKey = keys.secretkey;
 module.exports = passport => {
   passport.use(
     new JwtStrategy(opts, (jwt_payload, done) => {
-      console.log(jwt_payload);
-      db.query(`SELECT * from users where user_id = ${db.escape(jwt_payload.id)}`,(err,rows,fields)=>{
+      //console.log(jwt_payload);
+      db.query(`SELECT * from users where user_id = ${db.escape(jwt_payload.user_id)}`,(err,rows,fields)=>{
         if(!err){
           const user = rows[0];
           if(rows[0]){

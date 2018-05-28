@@ -89,7 +89,7 @@ router.post('/login',(req,res)=>{
         bcrypt.compare(password,rows[0].user_password)
           .then(isMatched=>{
             if(isMatched){
-              const payload = {id : rows[0].user_id , name: rows[0].user_name, profile_image : rows[0].profile_image_path};
+              const payload = {user_id : rows[0].user_id , user_name: rows[0].user_name, profile_image : rows[0].profile_image_path};
               console.log(payload);
               //signing the token
               jwt.sign(payload , keys.secretkey , {expiresIn :3600} , (err,token)=>{
