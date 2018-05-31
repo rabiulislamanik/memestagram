@@ -31,7 +31,7 @@ module.exports = function validateRegisterInput (data){
   if(validator.isEmpty(data.password)){
     errors.password = "Password is required.";
   }
-  
+
   if(validator.isEmpty(data.confirmedpassword)){
     errors.confirmedpassword = "Re-type the password.";
   }
