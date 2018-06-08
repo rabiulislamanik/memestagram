@@ -4,13 +4,17 @@
   "description": "A website for meme lovers.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "server" : "npm start",
+    "client" : "npm start --prefix client",
+    "dev" : "concurrently \"npm run server\" \"npm run client\" "
   },
   "author": "Rabiul Islam Anik",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
+    "concurrently": "^3.5.1",
     "db.js": "^0.15.0",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.2.1",
