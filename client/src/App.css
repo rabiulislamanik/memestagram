@@ -1,0 +1,8 @@
+.landing{
+  background-image: url('./src-images/landing.jpg');
+  background-repeat: no-repeat;
+  position: relative;
+  height: 100vh;
+  background-size: cover;
+  color :  white;
+}
