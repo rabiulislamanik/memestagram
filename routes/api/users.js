@@ -92,7 +92,7 @@ router.post('/login',(req,res)=>{
               const payload = {user_id : rows[0].user_id , user_name: rows[0].user_name, profile_image : rows[0].profile_image_path};
               console.log(payload);
               //signing the token
-              jwt.sign(payload , keys.secretkey , {expiresIn :3600} , (err,token)=>{
+              jwt.sign(payload,keys.secretkey ,(err,token)=>{
                 res.json({
                   success : true ,
                   token : 'Bearer '+token
