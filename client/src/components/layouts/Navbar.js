@@ -15,7 +15,7 @@ class Navbar extends Component {
     const {isAuthenticated,user} = this.props.auth;
     const authenticatedLink = (
       <ul>
-        <a href="#" onClick={(e)=>this.onClickLogOut(e)}><img src={user.profile_image_path} style={{width:'25px'}} className="rounded-circle" alt={user.user_name}/>LogOut</a>
+        <a href="#" onClick={(e)=>this.onClickLogOut(e)}><img src={user.profile_image} style={{width:'25px'}} className="rounded-circle" alt={user.user_name}/>LogOut</a>
       </ul>
     );
     const guestLink = (
