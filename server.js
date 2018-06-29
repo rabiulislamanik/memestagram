@@ -22,6 +22,7 @@ app.use('/posts',posts);
 app.use(passport.initialize());
 require('./config/passport.js')(passport);
 //
+app.use(express.static('public'));
 port = process.env.PORT || 5000 ;
 app.listen(port ,()=>{
   console.log(`Server is running on port : ${port}`);
