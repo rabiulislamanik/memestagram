@@ -7,12 +7,21 @@ const multer  = require('multer');
 const path = require('path');
 //const upload = multer({ dest: 'uploads/' });
 const validatePostInput = require('../../validation/posts.js');
+const keys = require('../../config/keys.js');
+const AWS = require('aws-sdk');
+var fs = require('fs');
 
+AWS.config.update({
+  accessKeyId: keys.iam_access_id,
+  secretAccessKey: keys.iam_secret,
+  region: 'ap-southeast-1',
+});
+const s3= new AWS.S3();
 
 const storage = multer.diskStorage({
   destination : 'uploads/',
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now()+path.extname(file.originalname));
+    cb(null, file.fieldname + Date.now()+path.extname(file.originalname));
   }
 })
 
@@ -38,6 +47,48 @@ function validateFile(file,cb){
     cb('Please upload images only.');
   }
 }
+
+function uploadFile(source, target){
+  console.log('preparing to upload...');
+  fs.readFile(source, function (err, filedata) {
+    if (!err) {
+        const putParams = {
+            Bucket      : 'memestagram',
+            Key         : target,
+            Body        : filedata
+        };
+        s3.putObject(putParams, function(err, data){
+          if (err) {
+            console.log('Error uploading data: ', err); 
+          } 
+          else{
+              console.log('succesfully uploaded the image!');
+              fs.unlink(source);
+          }
+        });
+    }
+    else{
+      console.log({'err':err});
+    }
+  });
+}
+
+//didn' authorize for testing purpose . will fix this later.
+router.get('get_image/:image_name',passport.authenticate('jwt',{session:false}),(req,res)=>{
+  const getParams = {
+    Bucket: 'memestagram',
+    Key: req.params.image_name
+  }
+  s3.getObject(getParams, function(err, data) {
+    if (err){
+        return res.status(400).send(err);
+    }
+    //console.log(data);
+    console.log("sending file...");
+    res.status(200).send(data.Body);
+    console.log("done...");
+  });
+});
 
 router.post('/',passport.authenticate('jwt',{session:false}),(req,res)=>{
   upload(req, res, function (err) {
@@ -68,6 +119,7 @@ router.post('/',passport.authenticate('jwt',{session:false}),(req,res)=>{
             // console.log(err);
           }
         });
+        uploadFile(req.file.path, req.file.filename);
       }
   });
 
