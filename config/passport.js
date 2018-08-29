@@ -22,7 +22,7 @@ module.exports = passport => {
           }
         }
         else{
-          res.status(400).send(err);
+          //res.status(400).send(err);
         }
       });
     })
